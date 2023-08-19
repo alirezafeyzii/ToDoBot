@@ -38,11 +38,15 @@ namespace ToDoBot.DataLayer
 				.IsUnique();
 				telegramUser
 				.Property(tUser => tUser.PhoneNumber)
+				.HasDefaultValue("1")
 				.IsRequired();
 
 				telegramUser
 				.HasIndex(tUser => tUser.Email)
 				.IsUnique();
+				telegramUser
+				.Property(tUser => tUser.Email)
+				.HasDefaultValue("null");
 			});
 		}
 	}

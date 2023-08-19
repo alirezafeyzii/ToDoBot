@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ToDoBot.DataLayer;
 
@@ -10,9 +11,11 @@ using ToDoBot.DataLayer;
 namespace ToDoBot.Migrations
 {
     [DbContext(typeof(ToDoDbContext))]
-    partial class ToDoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230815173322_Add_Default_Value_For_TelegramUser")]
+    partial class Add_Default_Value_For_TelegramUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
@@ -49,9 +52,6 @@ namespace ToDoBot.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValue("1");
-
-                    b.Property<int?>("State")
-                        .HasColumnType("INTEGER");
 
                     b.Property<DateTimeOffset>("UpdateDate")
                         .HasColumnType("TEXT");
