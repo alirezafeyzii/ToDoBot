@@ -1,3 +1,5 @@
+using Hangfire;
+using Hangfire.SQLite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Telegram.Bot;
@@ -17,6 +19,7 @@ builder.Services.AddDbContext<ToDoDbContext>(options =>
 });
 
 var botConfigurationSection = builder.Configuration.GetSection(BotConfiguration.Configuration);
+
 builder.Services.Configure<BotConfiguration>(botConfigurationSection);
 
 var botConfiguration = botConfigurationSection.Get<BotConfiguration>();
@@ -29,9 +32,14 @@ builder.Services.AddHttpClient("telegram_bot_client")
 					return new TelegramBotClient(options, httpClient);
 				});
 
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnection")));
+builder.Services.AddHangfireServer();
+
 builder.Services.AddScoped<ITelegramUserRepository, TelegramUserRepository>();
 
 builder.Services.AddScoped<UpdateHandlers>();
+
+builder.Services.AddSwaggerGen();
 
 
 //builder.Services.AddHostedService<ConfigureWebhook>();
@@ -43,12 +51,16 @@ builder.Services.AddControllers()
 
 var app = builder.Build();
 
-
+app.UseSwagger();
+app.UseSwaggerUI();
 
 //app.UseHttpsRedirection();
 
 //app.UseAuthorization();
-app.MapWebhookRoute<BotController>(route: botConfiguration.Route);
+//app.MapWebhookRoute<BotController>(route: botConfiguration.Route);
+
+//app.UseHangfireDashboard();
+//app.UseHangfireServer();
 
 app.MapControllers();
 
@@ -68,3 +80,8 @@ public class BotConfiguration
 	public string Route { get; init; } = default!;
 	public string SecretToken { get; init; } = default!;
 }
+
+
+
+
+//https://api.telegram.org/bot6088170455:AAFSrZ2fgZn9ukI2HBqeA52Vfy9wFHTCo18/setWebhook?url=https://4140-77-237-85-235.ngrok-free.app/api/bot

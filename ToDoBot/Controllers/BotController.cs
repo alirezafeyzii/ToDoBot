@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Hangfire;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Telegram.Bot.Types;
 using ToDoBot.Infrastructure.Filters;
@@ -6,7 +7,9 @@ using ToDoBot.Services.Handlers;
 
 namespace ToDoBot.Controllers
 {
-	public class BotController : Controller
+	[Route("api/[controller]")]
+	[ApiController]
+	public class BotController : ControllerBase
 	{
 		[HttpPost]
 		public async Task<IActionResult> Post(
@@ -15,7 +18,15 @@ namespace ToDoBot.Controllers
 			CancellationToken cancellationToken)
 		{
 			await handleUpdateService.HandleUpdateAsync(update, cancellationToken);
-			return Ok();
+
+            //BackgroundJob.Enqueue(() => Console.WriteLine("Hello, world!"));
+
+            //using (var server = new BackgroundJobServer())
+            //{
+            //    Console.ReadLine();
+            //}
+
+            return Ok();
 		}
 	}
 }

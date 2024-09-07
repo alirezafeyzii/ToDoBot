@@ -23,7 +23,7 @@ namespace ToDoBot.Controllers
 			_telegramUserRepository = telegramUserRepository;
 		}
 
-		[HttpPost]
+		[HttpGet]
 		public async void Test()
 		{
 			var updateHandlers = new UpdateHandlers(_botClient, _telegramUserRepository);
